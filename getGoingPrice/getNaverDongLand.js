@@ -10,84 +10,209 @@
  * 혹시 발생할 수 있는 모든 문제는 본인이 책임져야 함을 공지합니다.
  */
 
+
 // 네이버 부동산의 동 정보 코드
 // ex) 죽전동 4146510200
 var cortarNo = 4146510200;
 
-
-// 단지의 정보 리스
+// 네이버에서 가져온 단지 데이터
+var complexOriginList = [];
+// 시세표 단지 정보 데이터
 var complexList = [];
 
+var interval = {
+    min : 500,
+    max : 1000
+}
 
-if(!jQuery) {
-    console.error('jQuery 라이브러리가 로딩되지 않았습니다. 먼저 jQuery 라이브러리를 실행해 주세요!');
+var range = {
+    area : {
+        min : 30
+        max : 120
+    }
 }
 
 
 
-(function($){
 
-    if(!$) {
-        return;
+
+
+(function(Factory){
+
+    var jqueryTag = document.createElement('script');
+    jqueryTag.src = 'https://code.jquery.com/jquery-3.3.1.min.js';
+    jqueryTag.onload = function() {
+
+        window.factory = Factory();
     }
 
-    ////https://new.land.naver.com/api/complexes?page=1&cortarNo=4146510200&order=readRank&priceType=REAL&realEstateType=APT:JGC:ABYG:OR&tradeType=&tag=::::::::&rentPriceMin=0&rentPriceMax=900000000&priceMin=0&priceMax=900000000&areaMin=99&areaMax=132&sameAddressGroup=false
-    var getDongComplexAPI = 'https://new.land.naver.com/api/complexes';
-    var getDongComplexParam = {
-        page : 1,
-        cortarNo : cortarNo,
-        order : 'readRank',
-        priceType : 'REAL',
-        realEstateType : 'APT',
-        tradeType : null,
-        tag : '::::::::',
-        rentPriceMin : 0,
-        rentPriceMax : 900000000,
-        priceMin : 0,
-        priceMax : 900000000,
-        areaMin : 99,
-        areaMax : 132,
-        sameAddressGroup : false
+    document.body.appendChild(jqueryTag);
+
+
+
+
+
+
+})(function() {
+
+    var api = {
+        dongComplex : 'https://new.land.naver.com/api/complexes',
+        complexInfo : 'https://new.land.naver.com/api/complexes/{{complexNo}}'
     }
 
-    function complexDataFactory(data) {
+    var param = {
+        dongComplex : {
+            page : 1,
+            cortarNo : cortarNo,
+            order : 'readRank',
+            priceType : 'REAL',
+            realEstateType : 'APT',
+            tradeType : null,
+            tag : '::::::::',
+            rentPriceMin : 0,
+            rentPriceMax : 900000000,
+            priceMin : 0,
+            priceMax : 900000000,
+            areaMin : 99,
+            areaMax : 132,
+            sameAddressGroup : false
+        },
+        complexInfo : {
+            complexNo : undefined,
+            initial : 'Y'
+        }
+
+    }
+
+
+
+    /*
+     * 단지 정보 오브젝트.
+     * @complex : 네이버 단지 기본정보 데이터.
+     * return : 시세표 단지 정보 데이터 클래스.
+     */
+    function complexObject(complex) {
+        this.complexNo = complex.complexNo;
+        this.complexName = complex.complexName;
+        this.realEstateTypeCode = complex.realEstateTypeCode;
+        this.realEstateTypeName = complex.realEstateTypeName;
+        this.completionYearMonth = complex.completionYearMonth;
+        this.totalDongCount = complex.totalDongCount;
+        this.areaList = [];
+        return this;
+    }
+
+
+    function Factory() {
+        var that = this;
+        return this;
+    }
+
+    Factory.fn = Factory.prototype;
+
+
+    /**
+     * Common
+     */
+
+    Factory.fn.intervalTime = function() {
+        return Math.floor(Math.random() * (inerval.max - inerval.min + 1)) + inerval.min;
+    }
+
+
+    /**
+     * 동별 단지 리스트 조회
+     */
+    Factory.fn.requestDongComplex = function() {
+        var that = this;
+        $.ajax({
+            method : 'GET',
+            url : api.dongComplex,
+            data : param.dongComplex,
+            success : that.responseDongComplex
+        });
+    }
+
+    Factory.fn.responseDongComplex = function(data) {
         // 총단지 수 로그
-        if(getDongComplexParam.page === 1) {
+        if(param.dongComplex.page === 1) {
             console.info('요청하신 동에 총 ' + data.count + '단지가 있습니다.');
         }
 
         //단지 전체 데이어 만들기
         if(data.list && data.list.length > 0) {
-            complexList = complexList.concat(data.list);
+            complexOriginList = complexOriginList.concat(data.list);
             console.log('add complex list :>> '+ data.list);
         }
 
         if(data.isMoreData) {
             //페이지 카운트 올리기
-            getDongComplexParam.page++;
-            getDongComplex()
+            param.dongComplex.page++;
+            setTimeout(that.requestDongComplex, that.intervalTime);
         } else {
             console.log('####### 전체 단지 정보 #########');
-            console.log(complexList);
-        }
+            console.log(complexOriginList);
+            //TODO:: 단지 조회로 넘겨야 함.
 
+        }
     }
 
-    //$.get(naverLandAPI, naverLandParam).done(aptListFactory);
-    function getDongComplex() {
+
+    /**
+     * 단지 기본 정보 조회.
+     */
+    Factory.fn.requestComplexInfo = function(complexNo) {
+        var that = this;
+        param.dongComplex = complexNo;
+
         $.ajax({
             method : 'GET',
-            url : getDongComplexAPI,
-            data : getDongComplexParam,
-            success : complexDataFactory
+            url : api.complexInfo.replace(/{{complexNo}}/g, complexNo),
+            data : param.dongComplex,
+            success : this.responseComplexInfo
         });
+
+    }
+
+    Factory.fn.responseComplexInfo = function(data) {
+        var that = this;
+
+        //단지의 기본 정보
+        var complexData = new complexObject(data.complex);
+
+        for(item in data.complex.areaList) {
+            if(if)
+        }
+
+
     }
 
 
-    window.start = function() {
-        getDongComplex();
+
+
+
+
+
+    /**
+     * user interface.
+     * 사용자 인터페이스
+     */
+    Factory.fn.make = function(cortarNo) {
+        if(!cortarNo) {
+            console.info('cortarNo[네이버부동산 동구분 키값]이 없습니다. 확인후 다시 요청해 주세요!');
+            return;
+        }
+        if(isNaN(cortarNo)) {
+            console.info('cortarNo[네이버부동산 동구분 키값]은 숫자로만 구성되어 있습니다. 다시 확인해 주세요!');
+            return;
+        }
+
+        console.log('ok! start!!! 화이팅! ')
+
     }
 
+    return new Factory();
 
 
-})(jQuery);
+
+});
