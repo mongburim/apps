@@ -1,0 +1,411 @@
+{
+    "photos": [{
+        "imageKey": "2535",
+        "imageSrc": "/20171018_141/apt_realimage_15083118407146Sacp_JPEG/36b747b44e78ddb458a924f21301d4e6.jpg",
+        "imageId": "84315@20171018163040200613",
+        "newOldGbn": "NEW",
+        "smallCategoryName": "전경",
+        "explaination": "단지 전경입니다. 주택가 내에 위치한 단지이며 주변이 아파트 단지와 주택단지들이며 녹지로 둘러싸여 있으며 교통과 생활의 편리함을 주고 있습니다.",
+        "registYmdt": "20171018162500",
+        "imageOrder": 0
+    }, {
+        "imageKey": "2535",
+        "imageSrc": "/20171018_95/apt_realimage_1508311840117qyVUY_JPEG/fd8de9adcaecc9f21ff7d0fb8b62223e.jpg",
+        "imageId": "84316@20171018163039629166",
+        "newOldGbn": "NEW",
+        "smallCategoryName": "전경",
+        "explaination": "단지 전경입니다. 주택가 내에 위치한 단지이며 주변이 아파트 단지와 주택단지들이며 녹지로 둘러싸여 있으며 교통과 생활의 편리함을 주고 있습니다.",
+        "registYmdt": "20171018162500",
+        "imageOrder": 0
+    }, {
+        "imageKey": "2535",
+        "imageSrc": "/20171018_249/apt_realimage_15083118395450W6o4_JPEG/bac400146492c48dd2e9688aae39925b.jpg",
+        "imageId": "84302@20171018163038979080",
+        "newOldGbn": "NEW",
+        "smallCategoryName": "건물 외관",
+        "explaination": "건물 외관입니다. 1999년 지어진 단지로 건물 외관의 관리 상태가 양호하고 주택단지 들과 어우러져 생활의 편리함을 주고 있으며 깔끔한 주변 환경을 제공 하고 있습니다.",
+        "registYmdt": "20171018162500",
+        "imageOrder": 0
+    }, {
+        "imageKey": "2535",
+        "imageSrc": "/20171018_137/apt_realimage_1508311838897dakIH_JPEG/192726678e14ecb6e211efedb3a90c08.jpg",
+        "imageId": "84311@20171018163038478719",
+        "newOldGbn": "NEW",
+        "smallCategoryName": "건물 외관",
+        "explaination": "건물 외관입니다. 1999년 지어진 단지로 건물 외관의 관리 상태가 양호하고 주택단지 들과 어우러져 생활의 편리함을 주고 있으며 깔끔한 주변 환경을 제공 하고 있습니다.",
+        "registYmdt": "20171018162500",
+        "imageOrder": 0
+    }, {
+        "imageKey": "2535",
+        "imageSrc": "/20171018_34/apt_realimage_1508311838367mBIRD_JPEG/e4f5ad6b0ecd4f1922832b609e6a97b5.jpg",
+        "imageId": "84314@20171018163037795558",
+        "newOldGbn": "NEW",
+        "smallCategoryName": "건물 외관",
+        "explaination": "건물 외관입니다. 1999년 지어진 단지로 건물 외관의 관리 상태가 양호하고 주택단지 들과 어우러져 생활의 편리함을 주고 있으며 깔끔한 주변 환경을 제공 하고 있습니다.",
+        "registYmdt": "20171018162500",
+        "imageOrder": 0
+    }, {
+        "imageKey": "2535",
+        "imageSrc": "/20171018_254/apt_realimage_1508311837686D28Tw_JPEG/ce8ed32b85876b65d46689cba29bb314.jpg",
+        "imageId": "84306@20171018163037052599",
+        "newOldGbn": "NEW",
+        "smallCategoryName": "1층 공용현관",
+        "explaination": "공용현관 출입구입니다. 입구마다 출입통제장치가 설치되어있어 외부인의 출입을 차단하고 있습니다. 현관에 경사로가 있어서 유모차 및 휠체어의 진입이 수월하며 편리하게 입출입 할 수 있습니다.",
+        "registYmdt": "20171018162500",
+        "imageOrder": 0
+    }],
+    "complexDetail": {
+        "complexNo": "2535",
+        "complexName": "도담마을7단지뜨리에체",
+        "cortarNo": "4146510200",
+        "realEstateTypeCode": "APT",
+        "realEstateTypeName": "아파트",
+        "detailAddress": "414",
+        "roadAddress": "푸른솔로 49",
+        "latitude": 37.324888,
+        "longitude": 127.114286,
+        "totalHouseholdCount": 430,
+        "highFloor": 20,
+        "lowFloor": 16,
+        "completionYearMonth": "199902",
+        "totalDongCount": 6,
+        "maxSupplyArea": 141.83,
+        "minSupplyArea": 81.31,
+        "dealCount": 48,
+        "rentCount": 5,
+        "leaseCount": 35,
+        "shortTermRentCount": 0,
+        "isBookmarked": false,
+        "batlRatio": "249",
+        "btlRatio": "19",
+        "parkingCountByHousehold": 1.0,
+        "constructionCompanyName": "중명건설 주식회사",
+        "heatMethodTypeCode": "HT005",
+        "heatFuelTypeCode": "HF002",
+        "pyoengNames": "81B㎡, 81A㎡, 108㎡, 141",
+        "managementOfficeTelNo": "031-264-5858",
+        "address": "경기도 용인시 수지구 죽전동"
+    },
+    "complexPyeongDetailList": [{
+        "pyeongNo": "4",
+        "supplyAreaDouble": 81.31,
+        "supplyArea": "81.31",
+        "pyeongName": "81B",
+        "supplyPyeong": "24.63",
+        "pyeongName2": "24B",
+        "exclusiveArea": "59.86",
+        "exclusivePyeong": "18.13",
+        "householdCountByPyeong": "20",
+        "realEstateTypeCode": "A01",
+        "exclusiveRate": "74",
+        "grandPlanList": [{
+            "imageOrder": 0,
+            "imageSrc": "/20120124_123/land_system_1327330844931Dgcwr_JPEG/414_2535_4_81B_1270788418963.jpg",
+            "imageType": "4"
+        }],
+        "maintenanceCostList": [{
+            "basisYearMonth": "201805",
+            "totalPrice": "140951"
+        }, {
+            "basisYearMonth": "201804",
+            "totalPrice": "154738"
+        }, {
+            "basisYearMonth": "201803",
+            "totalPrice": "181206"
+        }, {
+            "basisYearMonth": "201802",
+            "totalPrice": "213545"
+        }, {
+            "basisYearMonth": "201801",
+            "totalPrice": "227264"
+        }, {
+            "basisYearMonth": "201712",
+            "totalPrice": "206371"
+        }, {
+            "basisYearMonth": "201711",
+            "totalPrice": "168302"
+        }, {
+            "basisYearMonth": "201710",
+            "totalPrice": "136419"
+        }, {
+            "basisYearMonth": "201709",
+            "totalPrice": "130442"
+        }, {
+            "basisYearMonth": "201708",
+            "totalPrice": "136210"
+        }, {
+            "basisYearMonth": "201707",
+            "totalPrice": "129771"
+        }],
+        "averageMaintenanceCost": {
+            "averageTotalPrice": "       165,929",
+            "summerTotalPrice": "       132,991",
+            "winterTotalPrice": "       215,727"
+        },
+        "articleStatistics": {
+            "pyeongNo": "4",
+            "dealCount": "3",
+            "leaseCount": "1",
+            "rentCount": "0",
+            "shortTermRentCount": "0",
+            "dealPriceMin": "3억2,000",
+            "dealPriceMax": "3억2,000",
+            "leasePriceMin": "2억6,000",
+            "leasePriceMax": "2억6,000",
+            "dealPricePerSpaceMin": "1,301",
+            "dealPricePerSpaceMax": "1,301",
+            "leasePricePerSpaceMin": "1,057",
+            "leasePricePerSpaceMax": "1,057",
+            "leasePriceRateMin": "81",
+            "leasePriceRateMax": "81",
+            "dealPriceString": "3억2,000",
+            "dealPricePerSpaceString": "(1,301만원/3.3㎡)",
+            "leasePriceString": "2억6,000",
+            "leasePricePerSpaceString": "(1,057만원/3.3㎡)",
+            "leasePriceRateString": "81%"
+        },
+        "entranceType": "계단식"
+    }, {
+        "pyeongNo": "1",
+        "supplyAreaDouble": 81.49,
+        "supplyArea": "81.49",
+        "pyeongName": "81A",
+        "supplyPyeong": "24.69",
+        "pyeongName2": "24A",
+        "exclusiveArea": "59.99",
+        "exclusivePyeong": "18.17",
+        "householdCountByPyeong": "172",
+        "realEstateTypeCode": "A01",
+        "exclusiveRate": "74",
+        "grandPlanList": [{
+            "imageOrder": 1,
+            "imageSrc": "/20120329_116/hscp_img_1333010613922QlQLI_JPEG/GW70711_1333010612226.jpg",
+            "imageType": "1"
+        }],
+        "maintenanceCostList": [{
+            "basisYearMonth": "201805",
+            "totalPrice": "141257"
+        }, {
+            "basisYearMonth": "201804",
+            "totalPrice": "155074"
+        }, {
+            "basisYearMonth": "201803",
+            "totalPrice": "181599"
+        }, {
+            "basisYearMonth": "201802",
+            "totalPrice": "214009"
+        }, {
+            "basisYearMonth": "201801",
+            "totalPrice": "227757"
+        }, {
+            "basisYearMonth": "201712",
+            "totalPrice": "206819"
+        }, {
+            "basisYearMonth": "201711",
+            "totalPrice": "168667"
+        }, {
+            "basisYearMonth": "201710",
+            "totalPrice": "136715"
+        }, {
+            "basisYearMonth": "201709",
+            "totalPrice": "130725"
+        }, {
+            "basisYearMonth": "201708",
+            "totalPrice": "136506"
+        }, {
+            "basisYearMonth": "201707",
+            "totalPrice": "130053"
+        }],
+        "averageMaintenanceCost": {
+            "averageTotalPrice": "       166,289",
+            "summerTotalPrice": "       133,280",
+            "winterTotalPrice": "       216,195"
+        },
+        "articleStatistics": {
+            "pyeongNo": "1",
+            "dealCount": "17",
+            "leaseCount": "25",
+            "rentCount": "0",
+            "shortTermRentCount": "0",
+            "dealPriceMin": "3억2,000",
+            "dealPriceMax": "3억3,000",
+            "leasePriceMin": "2억6,000",
+            "leasePriceMax": "2억8,000",
+            "dealPricePerSpaceMin": "1,298",
+            "dealPricePerSpaceMax": "1,339",
+            "leasePricePerSpaceMin": "1,055",
+            "leasePricePerSpaceMax": "1,136",
+            "leasePriceRateMin": "79",
+            "leasePriceRateMax": "88",
+            "dealPriceString": "3억2,000~3억3,000",
+            "dealPricePerSpaceString": "(1,298~1,339만원/3.3㎡)",
+            "leasePriceString": "2억6,000~2억8,000",
+            "leasePricePerSpaceString": "(1,055~1,136만원/3.3㎡)",
+            "leasePriceRateString": "79~88%"
+        },
+        "entranceType": "계단식"
+    }, {
+        "pyeongNo": "2",
+        "supplyAreaDouble": 108.94,
+        "supplyArea": "108.94",
+        "pyeongName": "108",
+        "supplyPyeong": "33.01",
+        "pyeongName2": "33",
+        "exclusiveArea": "84.97",
+        "exclusivePyeong": "25.74",
+        "householdCountByPyeong": "158",
+        "realEstateTypeCode": "A01",
+        "exclusiveRate": "78",
+        "grandPlanList": [{
+            "imageOrder": 2,
+            "imageSrc": "/20120329_22/hscp_img_1333010635641Tsa5C_JPEG/GW70711_1333010634111.jpg",
+            "imageType": "2"
+        }],
+        "maintenanceCostList": [{
+            "basisYearMonth": "201805",
+            "totalPrice": "200076"
+        }, {
+            "basisYearMonth": "201804",
+            "totalPrice": "219648"
+        }, {
+            "basisYearMonth": "201803",
+            "totalPrice": "257218"
+        }, {
+            "basisYearMonth": "201802",
+            "totalPrice": "303122"
+        }, {
+            "basisYearMonth": "201801",
+            "totalPrice": "322596"
+        }, {
+            "basisYearMonth": "201712",
+            "totalPrice": "292939"
+        }, {
+            "basisYearMonth": "201711",
+            "totalPrice": "238901"
+        }, {
+            "basisYearMonth": "201710",
+            "totalPrice": "193644"
+        }, {
+            "basisYearMonth": "201709",
+            "totalPrice": "185159"
+        }, {
+            "basisYearMonth": "201708",
+            "totalPrice": "193348"
+        }, {
+            "basisYearMonth": "201707",
+            "totalPrice": "184208"
+        }],
+        "averageMaintenanceCost": {
+            "averageTotalPrice": "       235,533",
+            "summerTotalPrice": "       188,778",
+            "winterTotalPrice": "       306,219"
+        },
+        "articleStatistics": {
+            "pyeongNo": "2",
+            "dealCount": "38",
+            "leaseCount": "17",
+            "rentCount": "8",
+            "shortTermRentCount": "0",
+            "dealPriceMin": "3억3,800",
+            "dealPriceMax": "3억9,000",
+            "leasePriceMin": "3억1,000",
+            "leasePriceMax": "3억4,000",
+            "dealPricePerSpaceMin": "1,026",
+            "dealPricePerSpaceMax": "1,183",
+            "leasePricePerSpaceMin": "941",
+            "leasePricePerSpaceMax": "1,032",
+            "leasePriceRateMin": "79",
+            "leasePriceRateMax": "101",
+            "dealPriceString": "3억3,800~3억9,000",
+            "dealPricePerSpaceString": "(1,026~1,183만원/3.3㎡)",
+            "leasePriceString": "3억1,000~3억4,000",
+            "leasePricePerSpaceString": "(941~1,032만원/3.3㎡)",
+            "leasePriceRateString": "79~101%",
+            "rentPriceString": "3,000/100~2억1,000/40",
+            "rentDepositPriceMin": "3,000",
+            "rentPriceMin": "100",
+            "rentDepositPriceMax": "2억1,000",
+            "rentPriceMax": "40"
+        },
+        "entranceType": "계단식"
+    }, {
+        "pyeongNo": "3",
+        "supplyAreaDouble": 141.83,
+        "supplyArea": "141.83",
+        "pyeongName": "141",
+        "supplyPyeong": "42.97",
+        "pyeongName2": "42",
+        "exclusiveArea": "114.88",
+        "exclusivePyeong": "34.81",
+        "householdCountByPyeong": "80",
+        "realEstateTypeCode": "A01",
+        "exclusiveRate": "81",
+        "grandPlanList": [{
+            "imageOrder": 3,
+            "imageSrc": "/20120329_120/hscp_img_13330106663141RLhP_JPEG/GW70711_1333010664883.jpg",
+            "imageType": "3"
+        }],
+        "maintenanceCostList": [{
+            "basisYearMonth": "201805",
+            "totalPrice": "270504"
+        }, {
+            "basisYearMonth": "201804",
+            "totalPrice": "296965"
+        }, {
+            "basisYearMonth": "201803",
+            "totalPrice": "347760"
+        }, {
+            "basisYearMonth": "201802",
+            "totalPrice": "409823"
+        }, {
+            "basisYearMonth": "201801",
+            "totalPrice": "436152"
+        }, {
+            "basisYearMonth": "201712",
+            "totalPrice": "396055"
+        }, {
+            "basisYearMonth": "201711",
+            "totalPrice": "322995"
+        }, {
+            "basisYearMonth": "201710",
+            "totalPrice": "261808"
+        }, {
+            "basisYearMonth": "201709",
+            "totalPrice": "250336"
+        }, {
+            "basisYearMonth": "201708",
+            "totalPrice": "261407"
+        }, {
+            "basisYearMonth": "201707",
+            "totalPrice": "249050"
+        }],
+        "averageMaintenanceCost": {
+            "averageTotalPrice": "       318,441",
+            "summerTotalPrice": "       255,229",
+            "winterTotalPrice": "       414,010"
+        },
+        "articleStatistics": {
+            "pyeongNo": "3",
+            "dealCount": "7",
+            "leaseCount": "2",
+            "rentCount": "0",
+            "shortTermRentCount": "0",
+            "dealPriceMin": "4억",
+            "dealPriceMax": "4억3,000",
+            "leasePriceMin": "3억5,000",
+            "leasePriceMax": "3억5,000",
+            "dealPricePerSpaceMin": "932",
+            "dealPricePerSpaceMax": "1,002",
+            "leasePricePerSpaceMin": "816",
+            "leasePricePerSpaceMax": "816",
+            "leasePriceRateMin": "81",
+            "leasePriceRateMax": "88",
+            "dealPriceString": "4억~4억3,000",
+            "dealPricePerSpaceString": "(932~1,002만원/3.3㎡)",
+            "leasePriceString": "3억5,000",
+            "leasePricePerSpaceString": "(816만원/3.3㎡)",
+            "leasePriceRateString": "81~88%"
+        },
+        "entranceType": "계단식"
+    }]
+}
