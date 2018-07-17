@@ -38,6 +38,7 @@ var range = {
     }
 }
 
+var interval = undefined;
 
 
 
@@ -119,7 +120,7 @@ Factory.fn = Factory.prototype;
 //factory start!!!
 Factory.fn.start = function(cortarNo) {
     param.dongComplex.cortarNo = cortarNo;
-    this.requestDongComplex();
+    factory.requestDongComplex();
 }
 Factory.fn.stop = function() {
     //모든것을 초기화 하고 멈춤.
@@ -142,7 +143,9 @@ Factory.fn.getPriceCleanString = function(str) {
     var strArr = str.split('억');
     strArr[1] = strArr[1].replace(/\,/g, '');
 
-    if(strArr[1].length === 1) {
+    if(strArr[1].length === 0) {
+        millionFix = '0000';
+    } else if(strArr[1].length === 1) {
         millionFix = '000';
     } else if(strArr[1].length === 2) {
         millionFix = '00';
@@ -153,7 +156,17 @@ Factory.fn.getPriceCleanString = function(str) {
     return strArr[0] + millionFix + strArr[1];
 }
 
+Factory.fn.verticalLog = function() {
+    console.info('--------------------------------------------------------------------------');
+}
 
+Factory.fn.complexLog = function(action, msg) {
+    console.info('[' + selectedComplex.complexName + selectedComplex.realEstateTypeName + ' @' + action + '] ' + msg );
+}
+
+Factory.fn.articlesLog = function(action, msg) {
+    console.info('[' + selectedComplex.complexName + selectedComplex.realEstateTypeName + ' @' + action + '] ' + msg );
+}
 
 /**
  * 동별 단지 리스트 조회
@@ -182,11 +195,9 @@ Factory.fn.responseDongComplex = function(data) {
     if(data.isMoreData) {
         //페이지 카운트 올리기
         param.dongComplex.page++;
-        setTimeout(factory.requestDongComplex, factory.intervalTime());
+
+        interval = setTimeout(factory.requestDongComplex, factory.intervalTime());
     } else {
-        console.log('####### 전체 단지 정보 #########');
-        console.log(complexList);
-        //TODO:: 단지 조회로 넘겨야 함.
 
         for(idx in complexList) {
             var obj = complexList[idx];
@@ -195,9 +206,14 @@ Factory.fn.responseDongComplex = function(data) {
 
         //단지별 정보 가져오기.
         if(isLive) {
+            console.info('########## 동별 단지 ##########');
+            console.info('해당동에 ' + complexList.length + '개의 단지를 검색했습니다. 단지별 정보와 매물검색을 시작합니다.');
+            console.info('########## 동별 단지 ##########');
             factory.getComplexFactory();
         } else {
-            console.log('단지 검색을 모두 마쳤습니다.');
+            console.log('####### 동별 단지 정보 #########');
+            console.log(complexList);
+            console.log('단지 검색을 모두 마쳤습니다. 수동으로 단지별 검색을 실행해 주세요!');
         }
 
     }
@@ -215,10 +231,14 @@ Factory.fn.getComplexFactory = function() {
     }
 
     //단지 조회
-    for(complex in complexList) {
+    for(idx in complexList) {
+        var complex = complexList[idx];
         if(complex.complexNo && !complex.isGet) {
+            //log
+            factory.verticalLog();
+            console.info(complex.complexName + '단지, 매매 ' + complex.dealCount + '건, 전세 ' + complex.leaseCount + '건의 매물을 분석을 시작.');
             searchComplexNo = complex.complexNo;
-            setTimeout(this.requestComplexInfo, this.intervalTime());
+            interval = setTimeout(factory.requestComplexInfo, factory.intervalTime());
             return;
         }
     }
@@ -229,14 +249,14 @@ Factory.fn.requestComplexInfo = function() {
 
     if(!searchComplexNo) {
         console.info('조회할 단지 정보가 존재하지 않습니다. searchComplexNo is undefined!');
-        setTimeout(this.getComplexFactory, this.intervalTime());
+        interval = setTimeout(factory.getComplexFactory, factory.intervalTime());
     }
 
     $.ajax({
         method : 'GET',
         url : api.complexDetailInfo.replace(/{{complexNo}}/g, searchComplexNo),
         data : param.complexDetailInfo,
-        success : this.responseComplexInfo
+        success : factory.responseComplexInfo
     });
 
 }
@@ -246,9 +266,10 @@ var selectedComplex = undefined;
 Factory.fn.responseComplexInfo = function(data) {
 
     //단지의 기본 정보
-    selectedComplex = this.getComplex(data.complex.complexNo);
+    selectedComplex = factory.getComplex(data.complexDetail.complexNo);
     if(!selectedComplex) {
-        console.error('단지 정보를 가져 올 수 없습니다.');
+        console.error('complexList에서 단지 정보를 가져 올 수 없습니다.');
+        return;
     }
 
     //단지 정보.
@@ -259,8 +280,9 @@ Factory.fn.responseComplexInfo = function(data) {
     //매물정보 검색한 areaNos 파라미터 구성
     var areaNoList = [];
 
-    for(area in data.complexPyeongDetailList) {
+    for(idx in data.complexPyeongDetailList) {
         //parseInt(area.supplyAreaDouble)
+        var area = data.complexPyeongDetailList[idx];
         //소형, 중형 평수만 조회.
         if(range.area.min <= parseInt(area.supplyAreaDouble) && range.area.max >= parseInt(area.supplyAreaDouble)) {
             //파라미터에 면적 추가.
@@ -287,6 +309,9 @@ Factory.fn.responseComplexInfo = function(data) {
             // 전용 평.
             areaObj.exclusivePyeong = area.exclusivePyeong;
 
+            //조회 이력 체크
+            areaObj.isGet = false;
+
             //저층, 탑층 제외 매매 최저가.
             areaObj.deal = {
                 priceMin : 999999,
@@ -301,46 +326,107 @@ Factory.fn.responseComplexInfo = function(data) {
                 buildingName : '',
                 floorInfo : ''
             }
+
+
             //전세 최고가.
             //areaObj.leasePriceMax = 0;
 
             //단지에 면적 오브젝트 추가.
             selectedComplex.areaList.push(areaObj);
+            //log
+            var msg = 'pyeongName[' + area.pyeongName+ '] 면적을 대상에 포함합니다.';
+            factory.complexLog('area include', msg)
+        } else {
+            var msg = 'pyeongName[' + area.pyeongName+ '] 면적을 대상에서 제외합니다.';
+            factory.complexLog('area exclude', msg)
         }
     }
     //단지내 면적 오브젝트 생성 및 매물검색 파라미터 생성 --- end.
 
-    //매물 파라미터 세팅.
-    param.articles.complexNo = data.complex.complexNo;
-    param.articles.areaNos = areaNoList.join(';');
-    api.article.page = 1;
-
-    setTimeout(this.requestDealArticles, this.intervalTime());
+    interval = setTimeout(factory.articlesFactory, factory.intervalTime());
 
 }
+
+Factory.fn.articlesFactory = function() {
+    //예외 처리.
+    if(!selectedComplex) {
+        if(isLive) {
+            console.info('>>>>>>>>>> @articlesFactory:: 조회 대상 단지정보가 존재 하지 않습니다. 다음 단지 작업으로 이관합니다.');
+            factory.getComplexFactory();
+        } else {
+            console.error('@articlesFactory:: 조회 대상 단지정보가 존재 하지 않습니다.');
+        }
+    }
+    //예외 처리
+    if(selectedComplex.areaList.length <= 0) {
+        factory.complexLog('articlesFactory', '분석 대상 면적정보가 존재하지 않습니다.');
+        selectedComplex.isGet = true;
+        if(isLive) {
+            factory.complexLog('articlesFactory', '다음 단지 작업을 이관합니다.');
+            factory.getComplexFactory();
+        } else {
+            console.log('단지 매물 검색을 종료합니다.');
+        }
+    }
+
+    param.articles.complexNo = selectedComplex.complexNo;
+
+    //sync로 돌리기.
+    for(idx in selectedComplex.areaList) {
+        var area = selectedComplex.areaList[idx];
+        if(!area.isGet) {
+            param.articles.page = 1;
+            factory.requestDealArticles(area.pyeongNo);
+            return;
+        }
+
+    }
+
+    //여기까지 왔다는건 면적별 매물을 모두 검색했다는 의미.
+    //
+    //선택된 단지 매물검색 완료 체크
+    selectedComplex.isGet = true;
+
+    if(isLive) {
+        console.log('단지 매물 검색을 완료 하였습니다! 다음 단지 매물을 검색합니다.');
+        factory.getComplexFactory();
+    } else {
+        console.log('단지 매물 검색을 완료 하였습니다!');
+    }
+
+
+}
+
+
 
 // 선택된 단지에서 면적의 데이터를 리턴
 Factory.fn.getAreaData = function(areaName) {
     if(!selectedComplex) {
         return null;
     }
-    for(area in selectedComplex.areaList) {
+    for(idx in selectedComplex.areaList) {
+        var area = selectedComplex.areaList[idx];
         if(area.pyeongName === areaName) {
             return area;
         }
     }
 }
 
-Factory.fn.requestDealArticles = function() {
+
+
+Factory.fn.requestDealArticles = function(pyeongNo) {
     // 매매 매물 검색 파라미터 세팅.
     param.articles.tradeTypes = 'A1';
-    param.articles.order = 'prc';       //낮은가격 우선.
+    param.articles.order = 'prc';      //낮은가격 우선.
+    if(pyeongNo) {
+        param.articles.areaNos = pyeongNo;
+    }
 
     $.ajax({
         method : 'GET',
         url : api.articles,
         data : param.articles,
-        success : $.proxy(this.responseDealArticles, this)
+        success : factory.responseDealArticles
     });
 
 }
@@ -349,8 +435,9 @@ Factory.fn.responseDealArticles = function(data) {
     var isLoop = true;
     if(data.articleList.length > 0) {
         //매물이 있는 경우.
-        for(article in data.articleList) {
-            var areaData = this.getAreaData(article.areaName);
+        for(idx in data.articleList) {
+            var article = data.articleList[idx];
+            var areaData = factory.getAreaData(article.areaName);
             //매매 금액 만원단위 환산.
             var floorInfo = article.floorInfo.split('/');
             var floor = parseInt(floorInfo[0]);
@@ -359,18 +446,19 @@ Factory.fn.responseDealArticles = function(data) {
             //탑층과 저층 제외.
             if(!isTop && floor > 3) {
                 //sameAddrMinPrc 매물 가격을 숫자 String 값으로 가져오기, 억제거. 빈 공간 0채우기.
-                var priceString = this.getPriceCleanString(article.sameAddrMinPrc);
+                var priceString = factory.getPriceCleanString(article.sameAddrMinPrc);
                 var priceMin = parseInt(priceString);
 
                 //매매 최저가 세팅.
-                if(areaData.deal.priceMin < priceMin) {
+                if(areaData.deal.priceMin > priceMin) {
                     areaData.deal.priceMin = priceMin;
                     areaData.deal.buildingName = article.buildingName;
                     areaData.deal.floorInfo = article.floorInfo;
                     isLoop = false;
+                    //log
+                    factory.complexLog('Deal', areaData.deal.buildingName + '> ' + article.areaName +'타입 ' + article.floorInfo + '층, 매매가 :' + article.sameAddrMinPrc);
                     break;
                 }
-
                 //TODO:: 최고가도 저장하는 것이 의미 있을까?
 
             } else {
@@ -382,14 +470,16 @@ Factory.fn.responseDealArticles = function(data) {
         //매물이 없는 경우
     }
 
+
+
     //매물이 추가적으로 더 있는 경우
     if(isLoop && data.isMoreData) {
         api.article.page++;
-        setTimeout($.proxy(this.responseDealArticles, this), this.intervalTime());
+        interval = setTimeout(factory.requestDealArticles, factory.intervalTime());
     } else {
         //더이상 매물이 없는 경우 전세 매물 검색.
-        api.article.page = 1;
-        setTimeout($.proxy(this.requestLeaseArticles, this), this.intervalTime());
+        param.articles.page = 1;
+        interval = setTimeout(factory.requestLeaseArticles, factory.intervalTime());
     }
 
 }
@@ -402,7 +492,7 @@ Factory.fn.requestLeaseArticles = function() {
         method : 'GET',
         url : api.articles,
         data : param.articles,
-        success : $.proxy(this.responseLeaseArticles, this)
+        success : factory.responseLeaseArticles
     });
 
 }
@@ -411,19 +501,23 @@ Factory.fn.responseLeaseArticles = function(data) {
     var isLoop = true;
     if(data.articleList.length > 0) {
         //매물이 있는 경우.
-        for(article in data.articleList) {
-            var areaData = this.getAreaData(article.areaName);
+        for(idx in data.articleList) {
+            var article = data.articleList[idx];
+            var areaData = factory.getAreaData(article.areaName);
             //전세 금액 만원단위 환산.
             //sameAddrMinPrc 매물 가격을 숫자 String 값으로 가져오기, 억제거. 빈 공간 0채우기.
-            var priceString = this.getPriceCleanString(article.sameAddrMaxPrc);
+            var priceString = factory.getPriceCleanString(article.sameAddrMaxPrc);
             var priceMax = parseInt(priceString);
 
             //매매 최저가 세팅.
-            if(areaData.lease.priceMax > priceMax) {
+            if(areaData.lease.priceMax < priceMax) {
                 areaData.lease.priceMax = priceMax;
                 areaData.lease.buildingName = article.buildingName;
                 areaData.lease.floorInfo = article.floorInfo;
                 isLoop = false;
+                //log
+                factory.complexLog('lease', areaData.deal.buildingName + '> ' + article.areaName + '타입 ' + article.floorInfo + '층, 전세가 : ' + article.sameAddrMaxPrc);
+                areaData.isGet = true;
                 break;
             }
 
@@ -435,17 +529,13 @@ Factory.fn.responseLeaseArticles = function(data) {
     //매물이 추가적으로 더 있는 경우
     if(isLoop && data.isMoreData) {
         api.article.page++;
-        setTimeout($.proxy(this.requestLeaseArticles, this), this.intervalTime());
+        interval = setTimeout(factory.requestLeaseArticles, factory.intervalTime());
     } else {
         //더이상 매물이 없는 경우 전세 매물 검색.
-        api.article.page = 1;
-        // 다른 단지 검색을 위해 팩토리 함수 호출.
-        if(isLive) {
-            console.log('단지 매물 검색을 완료 하였습니다! 다음 단지 매물을 검색합니다.');
-            this.getComplexFactory();
-        } else {
-            console.log('단지 매물 검색을 완료 하였습니다!');
-        }
+        param.articles.page = 1;
+
+        //선택된 단지 매물검색 완료 체크
+        factory.articlesFactory();
     }
 
 }
@@ -477,5 +567,8 @@ window.make = function(cortarNo) {
 }
 
 window.stop = function() {
-    factory.stop();
+    if(interval) {
+        clearTimeout(interval);
+        interval = undefined;
+    }
 }
