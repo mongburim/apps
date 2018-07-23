@@ -13,11 +13,11 @@
 
 
 // 네이버 부동산의 동 정보 코드
-// ex) 죽전동 4146510200 >> make(4146510200)
+// ex) 죽전동 4146510200 >> make(4146510200), 동천동(4146510300), 풍덕천동(4146510100), 호계동(4117310400)
 
 //var cortarNo = 4146510200;
 
-var isLive = false;
+var isLive = true;
 
 // 네이버에서 가져온 단지 데이터
 var complexOriginList = [];
@@ -38,7 +38,7 @@ var range = {
     }
 }
 
-var interval = undefined;
+var intervalTimer = undefined;
 
 
 
@@ -196,7 +196,7 @@ Factory.fn.responseDongComplex = function(data) {
         //페이지 카운트 올리기
         param.dongComplex.page++;
 
-        interval = setTimeout(factory.requestDongComplex, factory.intervalTime());
+        intervalTimer = setTimeout(factory.requestDongComplex, factory.intervalTime());
     } else {
 
         for(idx in complexList) {
@@ -238,10 +238,12 @@ Factory.fn.getComplexFactory = function() {
             factory.verticalLog();
             console.info(complex.complexName + '단지, 매매 ' + complex.dealCount + '건, 전세 ' + complex.leaseCount + '건의 매물을 분석을 시작.');
             searchComplexNo = complex.complexNo;
-            interval = setTimeout(factory.requestComplexInfo, factory.intervalTime());
+            intervalTimer = setTimeout(factory.requestComplexInfo, factory.intervalTime());
             return;
         }
     }
+
+    console.info('success!! 모든 단지의 분석을 마쳤습니다.');
 
 }
 
@@ -249,7 +251,7 @@ Factory.fn.requestComplexInfo = function() {
 
     if(!searchComplexNo) {
         console.info('조회할 단지 정보가 존재하지 않습니다. searchComplexNo is undefined!');
-        interval = setTimeout(factory.getComplexFactory, factory.intervalTime());
+        intervalTimer = setTimeout(factory.getComplexFactory, factory.intervalTime());
     }
 
     $.ajax({
@@ -343,9 +345,11 @@ Factory.fn.responseComplexInfo = function(data) {
     }
     //단지내 면적 오브젝트 생성 및 매물검색 파라미터 생성 --- end.
 
-    interval = setTimeout(factory.articlesFactory, factory.intervalTime());
+    intervalTimer = setTimeout(factory.articlesFactory, factory.intervalTime());
 
 }
+
+var selectedPyeongName = undefined;
 
 Factory.fn.articlesFactory = function() {
     //예외 처리.
@@ -356,6 +360,7 @@ Factory.fn.articlesFactory = function() {
         } else {
             console.error('@articlesFactory:: 조회 대상 단지정보가 존재 하지 않습니다.');
         }
+        return;
     }
     //예외 처리
     if(selectedComplex.areaList.length <= 0) {
@@ -364,9 +369,11 @@ Factory.fn.articlesFactory = function() {
         if(isLive) {
             factory.complexLog('articlesFactory', '다음 단지 작업을 이관합니다.');
             factory.getComplexFactory();
+
         } else {
             console.log('단지 매물 검색을 종료합니다.');
         }
+        return;
     }
 
     param.articles.complexNo = selectedComplex.complexNo;
@@ -376,6 +383,7 @@ Factory.fn.articlesFactory = function() {
         var area = selectedComplex.areaList[idx];
         if(!area.isGet) {
             param.articles.page = 1;
+            selectedPyeongName = area.pyeongName;
             factory.requestDealArticles(area.pyeongNo);
             return;
         }
@@ -463,11 +471,14 @@ Factory.fn.responseDealArticles = function(data) {
 
             } else {
                 //TODO:: 탑층과 저층만 매물이 있는 경우 어떻게 하지?
+                isLoop = false;
             }
 
         }
     } else {
-        //매물이 없는 경우
+        //매물이 없는 경우 추가 검색 중지. 세팅.
+        isLoop = false;
+
     }
 
 
@@ -475,11 +486,11 @@ Factory.fn.responseDealArticles = function(data) {
     //매물이 추가적으로 더 있는 경우
     if(isLoop && data.isMoreData) {
         api.article.page++;
-        interval = setTimeout(factory.requestDealArticles, factory.intervalTime());
+        intervalTimer = setTimeout(factory.requestDealArticles, factory.intervalTime());
     } else {
         //더이상 매물이 없는 경우 전세 매물 검색.
         param.articles.page = 1;
-        interval = setTimeout(factory.requestLeaseArticles, factory.intervalTime());
+        intervalTimer = setTimeout(factory.requestLeaseArticles, factory.intervalTime());
     }
 
 }
@@ -524,12 +535,15 @@ Factory.fn.responseLeaseArticles = function(data) {
         }
     } else {
         //매물이 없는 경우
+        isLoop = false;
+        factory.getAreaData(selectedPyeongName).isGet = true;
+
     }
 
     //매물이 추가적으로 더 있는 경우
     if(isLoop && data.isMoreData) {
         api.article.page++;
-        interval = setTimeout(factory.requestLeaseArticles, factory.intervalTime());
+        intervalTimer = setTimeout(factory.requestLeaseArticles, factory.intervalTime());
     } else {
         //더이상 매물이 없는 경우 전세 매물 검색.
         param.articles.page = 1;
@@ -567,8 +581,8 @@ window.make = function(cortarNo) {
 }
 
 window.stop = function() {
-    if(interval) {
-        clearTimeout(interval);
-        interval = undefined;
+    if(intervalTimer) {
+        clearTimeout(intervalTimer);
+        intervalTimer = undefined;
     }
 }
