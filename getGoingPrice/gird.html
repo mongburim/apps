@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>월급쟁이 부자들</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.2/jszip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.2/xlsx.min.js"></script>
+</head>
+
+<body>
+    <div class="container" style="font-size:13px;">
+        <div class="row">
+            <p>월급쟁이 부자들.. 표 스타일,</p><br/>
+        </div>
+        <div class="row">
+            <form class="form-inline">
+              <div class="form-group">
+                <label for="cortarNoInput">네이버부동산 동코드 </label>
+                <input type="text" id="cortarNoInput" class="form-control mx-sm-3" aria-describedby="passwordHelpInline" placeholder="cortarNo">
+                <button type="button" class="btn btn-primary mb-2">Confirm identity</button>
+              </div>
+            </form>
+        </div>
+        <div class="row">
+            <p>
+                <button class="btn btn-primary" type="button" onclick="exportXLSX()">간략 시세표</button>
+                <button class="btn btn-primary" type="button" onclick="exportXLSX('xlsx')">방랑미쉘 시세표</button>
+                <button class="btn btn-primary" type="button">소호리치 시세표</button>
+                <button class="btn btn-primary" type="button">유진아빠 시세표</button>
+            </p>
+        </div>
+        <div class="row" id="tableWrapper">
+            <table class="table table-bordered" id="data-table">
+                <thead>
+                    <tr>
+                        <th>단지명</th>
+                        <th>입주년도</th>
+                        <th>총세대수</th>
+                        <th>평형별세대수</th>
+                        <th>공급평형</th>
+                        <th>공급(㎡)</th>
+                        <th>전용평형</th>
+                        <th>전용(㎡)</th>
+                        <th>매매최저</th>
+                        <th>전세최고</th>
+                        <th>갭</th>
+                        <th>전세가율</th>
+                        <th>매매평단</th>
+                        <th>방</th>
+                        <th>욕실</th>
+                        <th>계단/복도</th>
+                        <th>비고</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>단지명</td>
+                        <td>입주년도</td>
+                        <td>총세대수</td>
+                        <td>평형별세대수</td>
+                        <td>공급평형</td>
+                        <td>공급(㎡)</td>
+                        <td>전용평형</td>
+                        <td>전용(㎡)</td>
+                        <td>매매최저</td>
+                        <td>전세최고</td>
+                        <td>갭</td>
+                        <td>전세가율</td>
+                        <td>매매평단</td>
+                        <td>방</td>
+                        <td>욕실</td>
+                        <td>계단/복도</td>
+                        <td>비고</td>
+                    </tr>
+                    <tr>
+                        <td>단지명</td>
+                        <td>입주년도</td>
+                        <td>총세대수</td>
+                        <td>평형별세대수</td>
+                        <td>공급평형</td>
+                        <td>공급(㎡)</td>
+                        <td>전용평형</td>
+                        <td>전용(㎡)</td>
+                        <td>매매최저</td>
+                        <td>전세최고</td>
+                        <td>갭</td>
+                        <td>전세가율</td>
+                        <td>매매평단</td>
+                        <td>방</td>
+                        <td>욕실</td>
+                        <td>계단/복도</td>
+                        <td>비고</td>
+                    </tr>
+                    <tr>
+                        <td>단지명</td>
+                        <td>입주년도</td>
+                        <td>총세대수</td>
+                        <td>평형별세대수</td>
+                        <td>공급평형</td>
+                        <td>공급(㎡)</td>
+                        <td>전용평형</td>
+                        <td>전용(㎡)</td>
+                        <td>매매최저</td>
+                        <td>전세최고</td>
+                        <td>갭</td>
+                        <td>전세가율</td>
+                        <td>매매평단</td>
+                        <td>방</td>
+                        <td>욕실</td>
+                        <td>계단/복도</td>
+                        <td>비고</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        function exportXLSX() {
+            var type = 'xlsx';
+            var elt = document.getElementById('data-table');
+            var wb = XLSX.utils.table_to_book(elt, {
+                sheet: "시세표"
+            });
+            return XLSX.writeFile(wb, ('시세표.' + (type || 'xlsx')));
+
+        }
+    </script>
+</body>
+
+</html>
