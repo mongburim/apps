@@ -27,8 +27,8 @@ var complexList = [];
 var searchComplexNo = undefined;
 
 var interval = {
-    min : 500,
-    max : 1000
+    min : 1000,
+    max : 2000
 }
 
 var range = {
@@ -476,11 +476,17 @@ Factory.fn.responseDealArticles = function(data) {
             var areaData = factory.getAreaData(article.areaName);
             //매매 금액 만원단위 환산.
             var floorInfo = article.floorInfo.split('/');
-            var floor = parseInt(floorInfo[0]);
+            var floor,
+                floorText = '';
+            if(isNaN(floorInfo[0])) {
+                floorText = floorInfo[0];
+            } else {
+                floor = parseInt(floorInfo[0]);
+            }
             var top = parseInt(floorInfo[1]);
             var isTop = floor == top;
             //탑층과 저층 제외.
-            if(!isTop && floor > 3) {
+            if(!isTop && (floor > 3 || floorText === '중' || floorText === '고')) {
                 //sameAddrMinPrc 매물 가격을 숫자 String 값으로 가져오기, 억제거. 빈 공간 0채우기.
                 var priceString = factory.getPriceCleanString(article.sameAddrMinPrc);
                 var priceMin = parseInt(priceString);
