@@ -3,10 +3,7 @@
 //global
 var isDev = true;
 
-
-
-
-(function(load, request, publisher) {
+(function(load, request, publisher, bot) {
 
     function App() {
         load(this.init);
@@ -18,7 +15,6 @@ var isDev = true;
         console.log('App init >>>>>>>>>>>>>>>>>>>>>> ');
         window.request = request();
         window.publisher = publisher(window.request);
-
     };
 
 
@@ -232,6 +228,19 @@ function(){
     + '    </div>'
     + '</li>';
 
+
+    var selector = {
+        areaAll : 'input#area-all',
+        areaChk : '#areaCondition input[target="areaChk"]',
+        areaChecked : '#areaCondition input:checked',
+        roomAll : 'input#room-all',
+        roomChk : '#roomCondition input[target="roomChk"]',
+        roomChecked : '#roomCondition input:checked',
+        secAll : 'input#sec-all',
+        secChk : '#secList input[type="checkbox"]',
+        secChecked : '#secList input:checked'
+    }
+
     function Publisher(request) {
         this.that = this;
         this.defaultCortarNo = '0000000000';
@@ -248,12 +257,30 @@ function(){
     }
 
     Publisher.fn.eventListener = function() {
+        /* 시도, 시군구, 읍명동 */
         //city
         $('#citySelector').on('change', jQuery.proxy(this.cityChange, this));
         //dvsn
         $('#dvsnSelector').on('change', jQuery.proxy(this.dvsnChange, this));
         //sec
         $('#secSelector').on('change', jQuery.proxy(this.secChange, this));
+        /* 면적 선택 박스 */
+        // 면적 전체 선택
+        $(selector.areaAll).on('change', jQuery.proxy(this.areaAll, this));
+        // 면전 평형별 선택
+        $(selector.areaChk).on('change', jQuery.proxy(this.areaChk, this));
+        /* 방개수 선택 박스 */
+        // 방개수 전체 선택
+        $(selector.roomAll).on('change', jQuery.proxy(this.roomAll, this));
+        // 방개수 평형별 선택
+        $(selector.roomChk).on('change', jQuery.proxy(this.roomChk, this));
+        /* 동선택 선택 박스 */
+        // 동 전체 선택/해제
+        $(selector.secAll).on('change', jQuery.proxy(this.secAll, this));
+
+        // bot 실행
+        $('button#startBot').on('click', jQuery.proxy(this.startBot, this));
+
 
     }
 
@@ -316,6 +343,7 @@ function(){
                     .replace(/\{\{val\}\}/g, data.regionList[i].cortarNo)
                     .replace(/{{name}}/g, data.regionList[i].cortarName));
             }
+
         } else {
             alert('시도 데이터를 가져오는 과정에서 문제가 발생했습니다. [E002]');
             return;
@@ -343,12 +371,83 @@ function(){
         }
         console.log('단지 리스트 개발해야함. 여기서 부터 ~~~~ ');
     }
+    /*
+    * 면적 체크
+    */
+    Publisher.fn.areaChk = function(e) {
+        $(selector.areaAll).get(0).checked = false;
 
+        if($(selector.areaChecked).length === 0) {
+            e.target.checked = true;
+        }
+    }
+
+    Publisher.fn.areaAll = function(e) {
+        if(e.target.checked) {
+            $(selector.areaChk).each(function(){
+                this.checked = false;
+            });
+        } else {
+            e.target.checked = true;
+        }
+    }
+
+    /*
+    * 방개수 체크
+    */
+    Publisher.fn.roomChk = function(e) {
+        $(selector.roomAll).get(0).checked = false;
+        if($(selector.roomChecked).length === 0) {
+            e.target.checked = true;
+        }
+    }
+
+    Publisher.fn.roomAll = function(e) {
+        if(e.target.checked) {
+            $(selector.roomChk).each(function(){
+                this.checked = false;
+            });
+        } else {
+            e.target.checked = true;
+        }
+    }
+    /*
+    * 동선택
+    */
+    Publisher.fn.secAll = function(e) {
+
+        $(selector.secChk).each(function(){
+            this.checked = e.target.checked;
+        });
+
+    }
+
+    /*
+    * 실행 조건을 검증하고 봇 실행
+    */
+    Publisher.fn.startBot = function(e) {
+        if($(selector.secChecked).length > 0) {
+
+            var cortarList = [];
+            $(selector.secChecked).each(function() {
+                cortarList.push(this.value);
+            });
+
+            if(bot) {
+                bot.start(cortarList);
+            } else {
+                alert('Bot undefined;');
+                return;
+            }
+
+        } else {
+            alert('선택된 동이 없습니다.!')
+            return false;
+        }
+    }
 
 
     return new Publisher(request);
-
-
 
 
 });

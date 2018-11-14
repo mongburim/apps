@@ -33,12 +33,9 @@
                 </div>
                 <div style="max-height: 393px;overflow:auto;">
                     <ul class="list-group mb-3" id="secList">
-                        <!-- <li class="list-group-item d-flex justify-content-between lh-condensed" >
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" value="all" id="">
-                                <label class="custom-control-label" for="id">전체</label>
-                            </div>
-                        </li> -->
+                        <li class="list-group-item d-flex justify-content-between lh-condensed" style="height:50px;">    <div class="custom-control custom-checkbox">        <input type="checkbox" class="custom-control-input" value="4119011600" id="sec4119011600" checked="true">        <label class="custom-control-label" for="sec4119011600">계수동</label>    </div></li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed" style="height:50px;">    <div class="custom-control custom-checkbox">        <input type="checkbox" class="custom-control-input" value="4119011601" id="sec4119011600" checked="true">        <label class="custom-control-label" for="sec4119011600">계수동</label>    </div></li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed" style="height:50px;">    <div class="custom-control custom-checkbox">        <input type="checkbox" class="custom-control-input" value="4119011602" id="sec4119011600" checked="true">        <label class="custom-control-label" for="sec4119011600">계수동</label>    </div></li>
                     </ul>
                 </div>
 
@@ -53,7 +50,7 @@
             </div>
             <!-- 조건 -->
             <div class="col-md-8 order-md-1">
-                <h4 class="mb-3">On Conditions Bot</h4>
+                <h4 class="mb-3" id="regionTitle">지역을 동단위로 선택해 주세요!</h4>
                 <form class="needs-validation" novalidate="">
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -82,30 +79,30 @@
                     <hr class="mb-4">
 
                     <div class="row">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-4 mb-3" id="areaCondition">
                             <h4 class="mb-3">면적</h4>
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="area-all" checked="true">
                                 <label class="custom-control-label" for="area-all">전체</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="area0py">
+                                <input type="checkbox" class="custom-control-input" id="area0py" target="areaChk">
                                 <label class="custom-control-label" for="area0py">~10평</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="area10py">
+                                <input type="checkbox" class="custom-control-input" id="area10py" target="areaChk">
                                 <label class="custom-control-label" for="area10py">10평대</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="area20py">
+                                <input type="checkbox" class="custom-control-input" id="area20py" target="areaChk">
                                 <label class="custom-control-label" for="area20py">20평대</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="area30py">
+                                <input type="checkbox" class="custom-control-input" id="area30py" target="areaChk">
                                 <label class="custom-control-label" for="area30py">30평대</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="area40py">
+                                <input type="checkbox" class="custom-control-input" id="area40py" target="areaChk">
                                 <label class="custom-control-label" for="area40py">40평대</label>
                             </div>
                         </div>
@@ -138,36 +135,36 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-4 mb-3" id="roomCondition">
                             <h4 class="mb-3">방개수</h4>
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="room-all" checked="true">
                                 <label class="custom-control-label" for="room-all">전체</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="room-1">
+                                <input type="checkbox" class="custom-control-input" id="room-1" target="roomChk">
                                 <label class="custom-control-label" for="room-1">방1개</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="room-2">
+                                <input type="checkbox" class="custom-control-input" id="room-2" target="roomChk">
                                 <label class="custom-control-label" for="room-2">방2개</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="room-3">
+                                <input type="checkbox" class="custom-control-input" id="room-3" target="roomChk">
                                 <label class="custom-control-label" for="room-3">방3개</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="room-4">
+                                <input type="checkbox" class="custom-control-input" id="room-4" target="roomChk">
                                 <label class="custom-control-label" for="room-4">방4개</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="room-5">
+                                <input type="checkbox" class="custom-control-input" id="room-5" target="roomChk">
                                 <label class="custom-control-label" for="room-5">방5개</label>
                             </div>
                         </div>
                     </div>
                     <hr class="mb-4">
-                    <button class="btn btn-primary btn-lg btn-block" type="button" disabled=""> Start Market Bot </button>
+                    <button class="btn btn-primary btn-lg btn-block" type="button" id="startBot"> Start Market Bot </button>
 
                 </form>
             </div>
@@ -176,6 +173,7 @@
 
 
     <script src="./js/app.js"></script>
+    <script src="./js/bot.js"></script>
 </body>
 
 </html>
