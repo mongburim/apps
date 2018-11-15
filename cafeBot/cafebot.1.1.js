@@ -20,6 +20,8 @@ var menuId = '89';
 var myComment = 'rr';
 // 딜레이 타이밍입니다. 수정하지 않으셔도 됩니다.
 var intervalTime = 250;
+// 딜레이 여부
+var isDelay = true;
 
 
 var target;
@@ -58,7 +60,11 @@ function intervalChecker() {
                 console.log('새로운 게시글이 없습니다. 첫번째 게시글 아이디 : ' + $firstNode.attr('data-article-id') + ', interval Time :' + gapTime);
 
                 if(!isStop) {
-                    checkInterval = setTimeout(intervalChecker, intervalTime);
+                    if(isDelay) {
+                        checkInterval = setTimeout(intervalChecker, intervalTime);
+                    } else {
+                        intervalChecker();
+                    }
                 } else {
                     console.log('stop:: interval check post');
 
