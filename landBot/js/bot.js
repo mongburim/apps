@@ -133,12 +133,160 @@
 
         if(isAllChecked) {
             // isAllChecked = true 라는 것은 모두 조회가 완료되었다는 의미. 다음 스텝으로 진행.
-            console.log('todo:: ~~~~ 단지 정보 조회.');
+            console.log('[Bot.fn.getComplex] 요청한 동의 단지 정보를 모두 조회하였습니다.');
+            console.log('[Bot.fn.readyComplexInfo] 단지 상세 정보를 시작합니다.');
+            bot.readyComplexInfo();
+
+        }
+    }
+
+
+    Bot.fn.readyComplexInfo = function() {
+
+        var chkObj = {
+            info : false,
+            area : false,
+            skip : false
+        }
+
+        for(var i=0; i < data.complexList.length; i++) {
+            data.complexList[i].check = chkObj;
+            if(data.complexList[i].totalHouseholdCount < condition.household ) {
+                data.complexList[i].check.info = true;
+                data.complexList[i].check.area = true;
+                data.complexList[i].check.skip = true;
+                console.log('세대수 조건 ' + condition.household + '보다 작은 ' + data.complexList[i].totalHouseholdCount + '세대, ' + data.complexList[i].complexName + '아파트를 조회대상에서 제외합니다.');
+            }
+
+        }
+        console.log('[Bot.fn.readyComplexInfo > Bot.fn.getComplexFactory] 체크 상태를 모두 추가 하였습니다. 단지 정보를 조회를 시작합니다.');
+        bot.getComplexFactory();
+
+    }
+
+    Bot.fn.getComplexFactory = function() {
+
+        var complexIsAllChecked = true;
+
+        for(var i=0; i < data.complexList.length; i++) {
+            //단지 상세 정보를 조회해야함.
+            if(!data.complexList[i].check.info) {
+                this.getComplexInfo(data.complexList[i]);
+                complexIsAllChecked = false;
+                break;
+            }
+            //매물 조회를 해야함.
+            if(!data.complexList[i].check.area) {
+                //단지 조회가 선행되지 않은 경우.
+                if(!data.complexList[i].detail) {
+                    this.errorSkip('E01');
+                    return;
+                }
+
+                if(!data.complexList[i].detail.complexPyeongDetailList.length > 0) {
+                    var areaList = data.complexList[i].detail.complexPyeongDetailList;
+                    for(var j=0; j < areaList.length; j++) {
+
+
+
+                        //check 오브젝트가 없는 경우 생성.
+                        if(!areaList[j].check) {
+                            areaList[j].check = {
+                                rant : false,
+                                deal : false
+                            }
+                        }
+
+
+
+
+
+                    }
+                }
+
+                this.getComplexDeal(data.complexList[i]);
+                complexIsAllChecked = false;
+                break;
+            }
 
         }
 
+        if(complexIsAllChecked) {
+            // isAllChecked = true 라는 것은 모두 조회가 완료되었다는 의미. 다음 스텝으로 진행.
+            console.log('단지 정보 조회 완료.');
+
+        }
 
     }
+
+    //단지 상세 정보 조회.
+    Bot.fn.getComplexInfo = function(complex) {
+
+        console.log('[Bot.fn.getComplexInfo] ', complex.cortarAddress,' ', complex.complexName, ' 아파트 상세정보 조회 시작.');
+
+        var api = '';
+        if(isDev) {
+            api ='./api/regions/complexDetail';
+        } else {
+            api = 'https://new.land.naver.com/api/complexes/' + complex.complexNo;
+        }
+
+        $.ajax({
+            method : 'GET',
+            url : api,
+            data : {
+                sameAddressGroup : true
+            },
+            dataType : 'json',
+            success : function(res) {
+                if(res) {
+                    complex.detail = res;
+                    complex.check.info = true;
+                }
+
+                botInteval = setTimeout(bot.getComplexFactory, bot.intervalTime());
+            },
+            error : function() {
+                console.error('[ERROR] Bot.fn.getComplexInfo ajax');
+                return;
+            }
+        });
+
+
+
+    }
+
+    //단지 거래 정보 조회.
+    Bot.fn.getComplexDeal = function() {
+
+
+
+    }
+
+
+    Bot.fn.errorSkip = function(type, complex) {
+
+        switch (type) {
+            case 'E01':
+                console.warn('단지 상세 조회 없이 면적 조회 요청으로 들어옴. 개발자에게 확인 요함.');
+                console.warn('complexList idx[' + (i+1) + '] 단지명[' + complex.complexName + ']');
+                console.warn('해당 단지 조회를 건너뛰고 다음 단지를 조회함.');
+                break;
+            case 'E02':
+                break;
+            case 'E03':
+                break;
+            case 'E04':
+                break;
+            default:
+                complex.check.info = true;
+                complex.check.area = true;
+                botInteval = setTimeout(bot.getComplexFactory, bot.intervalTime());
+                break;
+        }
+
+    }
+
 
     Bot.fn.intervalTime = function() {
         return Math.floor(Math.random() * (interval.max - interval.min + 1)) + interval.min;

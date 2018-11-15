@@ -3,6 +3,27 @@
 //global
 var isDev = true;
 
+var condition = {
+    area : {
+        all : true,
+        area0py : false,
+        area10py : false,
+        area20py : false,
+        area30py : false,
+        area40py : false
+    },
+    household : 0,
+    room : {
+        all : true,
+        room1 : false,
+        room2 : false,
+        room3 : false,
+        room4 : false,
+        room5 : false
+    }
+};
+
+
 (function(load, request, publisher, bot) {
 
     function App() {
@@ -376,16 +397,24 @@ function(){
     */
     Publisher.fn.areaChk = function(e) {
         $(selector.areaAll).get(0).checked = false;
+        //condition
+        condition.area.all = false;
 
         if($(selector.areaChecked).length === 0) {
             e.target.checked = true;
         }
+
+        //condition
+        condition.area[e.target.id] = e.target.checked;
+
     }
 
     Publisher.fn.areaAll = function(e) {
         if(e.target.checked) {
+            condition.area.all = true;
             $(selector.areaChk).each(function(){
                 this.checked = false;
+                condition.area[this.id] = false;
             });
         } else {
             e.target.checked = true;
@@ -397,15 +426,23 @@ function(){
     */
     Publisher.fn.roomChk = function(e) {
         $(selector.roomAll).get(0).checked = false;
+        //condition
+        condition.room.all = false;
+
         if($(selector.roomChecked).length === 0) {
             e.target.checked = true;
         }
+        //condition
+        condition.room[e.target.id] = e.target.checked;
+
     }
 
     Publisher.fn.roomAll = function(e) {
         if(e.target.checked) {
+            condition.room.all = true;
             $(selector.roomChk).each(function(){
                 this.checked = false;
+                condition.room[this.id] = false;
             });
         } else {
             e.target.checked = true;
@@ -422,10 +459,15 @@ function(){
 
     }
 
+
     /*
     * 실행 조건을 검증하고 봇 실행
     */
     Publisher.fn.startBot = function(e) {
+
+        //조회 조건 데이터 생성.
+        condition.household = parseInt(document.botCondition.household.value);
+
         if($(selector.secChecked).length > 0) {
 
             var cortarList = [];
