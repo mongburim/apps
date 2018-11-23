@@ -31,6 +31,7 @@ var condition = {
 
     function App() {
         load(this.init);
+        return this;
     }
 
     App.fn = App.prototype;
@@ -43,7 +44,9 @@ var condition = {
         }
         window.request = request();
         window.publisher = publisher(window.request);
-        window.export = new Export();
+        if(debug) {
+            output.init();
+        }
     };
 
     App.fn.getPriceCleanString = function(str) {
@@ -83,6 +86,18 @@ var condition = {
 
     App.fn.timeString = function(date) {
         var d = date || new Date();
+        var s = this.numToStr(d.getFullYear(), 4) + '-'
+                + this.numToStr(d.getMonth() + 1, 2) + '-'
+                + this.numToStr(d.getDate(), 2) + ' '
+                + this.numToStr(d.getHours(), 2) + ':'
+                + this.numToStr(d.getMinutes(), 2) + ':'
+                + this.numToStr(d.getSeconds(), 2);
+        d = undefined;
+        return s;
+    }
+
+    App.fn.timeToFullDate = function(timeVal) {
+        var d = new Date(timeVal);
         var s = this.numToStr(d.getFullYear(), 4) + '-'
                 + this.numToStr(d.getMonth() + 1, 2) + '-'
                 + this.numToStr(d.getDate(), 2) + ' '

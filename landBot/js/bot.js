@@ -90,7 +90,7 @@
             cortarList : [],
             bot : {
                 version : appVer,
-                startDate : app.timeString(),
+                startDate : new Date().getTime(),
                 endDate : undefined
             }
         }
@@ -281,10 +281,20 @@
         if(complexIsAllChecked) {
             // isAllChecked = true 라는 것은 모두 조회가 완료되었다는 의미. 다음 스텝으로 진행.
             isBot = false;
-            data.bot.endDate = app.timeString();
+            data.bot.endDate = new Date().getTime();
+
+            var runTime = Math.floor((data.bot.endDate - data.bot.startDate)/1000);
+
+            console.log('==================================================================');
+            console.log('wecando bot version : ' + data.bot.version);
+            console.log('bot 시작시간 : ' + app.timeToFullDate(data.bot.startDate));
+            console.log('bot 종료시간 : ' + app.timeToFullDate(data.bot.endDate));
+            console.log('bot 실행시간 : ' + Math.floor(runTime/60)  + '분 ' + (runTime%60) +'초');
             console.log('==================================================================');
             console.log('=============== ### bot collection completed ### =================');
             console.log('==================================================================');
+
+            output.createTable();
         }
 
     }
