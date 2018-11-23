@@ -2,6 +2,9 @@
 
 //global
 var isDev = true;
+var debug = true;
+var isHTML = true;
+var appVer = 'v0.2'
 
 var condition = {
     area : {
@@ -34,9 +37,91 @@ var condition = {
 
     App.fn.init = function() {
         console.log('App init >>>>>>>>>>>>>>>>>>>>>> ');
+
+        if(!isHTML) {
+            $(document.body).append($(templeteHTML));
+        }
         window.request = request();
         window.publisher = publisher(window.request);
+        window.export = new Export();
     };
+
+    App.fn.getPriceCleanString = function(str) {
+        var millionFix = '';
+        if(str.indexOf('억') > 0) {
+            var strArr = str.split('억');
+            strArr[1] = strArr[1].replace(/\,/g, '');
+
+            if(strArr[1].length === 0) {
+                millionFix = '0000';
+            } else if(strArr[1].length === 1) {
+                millionFix = '000';
+            } else if(strArr[1].length === 2) {
+                millionFix = '00';
+            } else if(strArr[1].length === 3) {
+                millionFix = '0';
+            }
+
+            return strArr[0] + millionFix + strArr[1];
+        } else {
+            return str.replace(/\,/g, '');
+        }
+    };
+
+
+    App.fn.timeCode = function(date) {
+        var d = date || new Date();
+        var s = this.numToStr(d.getFullYear(), 4)
+                + this.numToStr(d.getMonth() + 1, 2)
+                + this.numToStr(d.getDate(), 2)
+                + this.numToStr(d.getHours(), 2)
+                + this.numToStr(d.getMinutes(), 2)
+                + this.numToStr(d.getSeconds(), 2);
+        d = undefined;
+        return s;
+    }
+
+    App.fn.timeString = function(date) {
+        var d = date || new Date();
+        var s = this.numToStr(d.getFullYear(), 4) + '-'
+                + this.numToStr(d.getMonth() + 1, 2) + '-'
+                + this.numToStr(d.getDate(), 2) + ' '
+                + this.numToStr(d.getHours(), 2) + ':'
+                + this.numToStr(d.getMinutes(), 2) + ':'
+                + this.numToStr(d.getSeconds(), 2);
+        d = undefined;
+        return s;
+    }
+
+    App.fn.dateCode = function(date) {
+        var d = date || new Date();
+        var s = this.numToStr(d.getFullYear(), 4)
+                + this.numToStr(d.getMonth() + 1, 2)
+                + this.numToStr(d.getDate(), 2);
+        d = undefined;
+        return s;
+    }
+
+    App.fn.dateString = function(date) {
+        var d = date || new Date();
+        var s = this.numToStr(d.getFullYear(), 4) + '-'
+                + this.numToStr(d.getMonth() + 1, 2) + '-'
+                + this.numToStr(d.getDate(), 2);
+        d = undefined;
+        return s;
+    }
+
+    App.fn.numToStr = function(num, len) {
+        var result = "" + num;
+        var tmp;
+        for ( var i = len - 1; i > 0; i--) {
+            tmp = Math.pow(10, i);
+            if (num < tmp) {
+                result = "0" + result;
+            }
+        }
+        return result;
+    }
 
 
 
@@ -483,6 +568,14 @@ function(){
             }
 
         } else {
+
+            //디버깅. 산본
+            if(debug) {
+                var cortarList = ['4141010400'];
+                bot.start(cortarList);
+                return;
+            }
+
             alert('선택된 동이 없습니다.!')
             return false;
         }
