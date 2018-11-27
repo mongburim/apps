@@ -40,7 +40,6 @@
 
 
 
-
     var param = {
         articles : {
             realEstateType: 'APT',
@@ -73,15 +72,22 @@
     }
 
 
-    function Bot() {
+    var complexCount = undefined;
+    var complexProgress = undefined;
 
+    function Bot() {
         this.initData();
+        complexCount = document.getElementById('complexCount');
+        complexProgress = document.getElementById('complexProgress');
     }
 
     Bot.fn = Bot.prototype;
 
     Bot.fn.getData = function() {
         return data;
+    }
+    Bot.fn.setData = function(d) {
+        data = d;
     }
 
     Bot.fn.initData = function() {
@@ -206,6 +212,8 @@
 
     Bot.fn.readyComplexInfo = function() {
 
+
+
         for(var i=0; i < data.complexList.length; i++) {
             data.complexList[i].check = {
                 info : false,
@@ -275,6 +283,9 @@
                 }
 
             }
+
+            //progress check
+            bot.progress(i);
 
         }
 
@@ -712,8 +723,16 @@
 
     }
 
+    Bot.fn.progress = function(i) {
+        var total = data.complexList.length;
+        var rate = parseInt((i/total)*100);
+        complexCount.innerHTML = i + '/' + total;
+        complexProgress.innerHTML = rate + '%';
+        complexProgress.style.width = rate + '%';
+
+    }
 
 
-    window.bot = new Bot();
+    window.Bot = Bot;
 
 })();

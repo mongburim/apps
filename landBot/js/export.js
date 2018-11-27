@@ -65,6 +65,7 @@
 
     function Export() {
         //this.init();
+        this.event();
     }
 
     var targetComplex = undefined;
@@ -88,15 +89,21 @@
             window.data = bot.getData();
         }
 
+    }
+
+    Export.fn.event = function() {
         $('#exportExcel').on('click', this.exportXlsx);
         $('#exportJson').on('click', this.exportJson);
     }
+
+
 
     Export.fn.emptyTable = function() {
         $('#tableWrap').empty();
     }
 
     Export.fn.createTable = function() {
+        this.init();
         this.emptyTable();
         //
         var tableEle = document.createElement('table');
@@ -108,6 +115,8 @@
         this.createTbody(tableEle);
 
         $('#tableWrap').append(tableEle);
+        $('#resultWrap').show();
+        $('#resultBtn').show();
 
     }
 
@@ -437,7 +446,7 @@
         alert('준비중입니다.');
         return false;
     }
-    window.output = new Export();
+    window.Export = Export;
 
 
 })(function() {

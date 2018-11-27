@@ -44,8 +44,17 @@ var condition = {
         }
         window.request = request();
         window.publisher = publisher(window.request);
-        if(debug) {
-            output.init();
+        if(Bot) {
+            window.bot = new Bot();
+        }
+        if(Export) {
+            window.output = new Export();
+        }
+        if(output) {
+            output.event();
+            if(debug) {
+                output.init();
+            }
         }
     };
 
