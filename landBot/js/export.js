@@ -88,12 +88,11 @@
         } else {
             window.data = bot.getData();
         }
-
     }
 
     Export.fn.event = function() {
         $('#exportExcel').on('click', this.exportXlsx);
-        $('#exportJson').on('click', this.exportJson);
+        $('#createTable').on('click', $.proxy(this.createTable, this));
     }
 
 
@@ -117,6 +116,8 @@
         $('#tableWrap').append(tableEle);
         $('#resultWrap').show();
         $('#resultBtn').show();
+
+        alert('시세표가 완성되었습니다. 엑셀파일로 다운로드해 주세요!');
 
     }
 
@@ -190,7 +191,9 @@
         }
 
         //단지와 단지 사이에 공백 띄우기.
-        this.emptyRow(tbody);
+        if($('#isExcelRow')[0].checked){
+            this.emptyRow(tbody);
+        }
 
     }
 
@@ -446,6 +449,15 @@
         alert('준비중입니다.');
         return false;
     }
+
+
+    Export.fn.show = function() {
+        $('#resultWrap').show();
+        $('#resultBtn').show();
+        alert('시세표 설정 후 표를 만들어 주세요!');
+    }
+
+
     window.Export = Export;
 
 

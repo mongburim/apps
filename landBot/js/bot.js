@@ -19,8 +19,8 @@
     }
 
     var interval = {
-        min : 1000,
-        max : 2000
+        min : 1500,
+        max : 3000
     }
 
     var replayCount = 3;
@@ -74,11 +74,13 @@
 
     var complexCount = undefined;
     var complexProgress = undefined;
+    var botMessage = undefined;
 
     function Bot() {
         this.initData();
         complexCount = document.getElementById('complexCount');
         complexProgress = document.getElementById('complexProgress');
+        botMessage = $('#botProgress span.text-muted')[0];
     }
 
     Bot.fn = Bot.prototype;
@@ -305,7 +307,9 @@
             console.log('=============== ### bot collection completed ### =================');
             console.log('==================================================================');
 
-            output.createTable();
+            bot.progress(data.complexList.length);
+            bot.message('시세 조회를 모두 마쳤습니다.');
+            output.show();
         }
 
     }
@@ -314,7 +318,7 @@
     Bot.fn.getComplexInfo = function(complex) {
 
         console.log('[Bot.fn.getComplexInfo] ', complex.cortarAddress,' ', complex.complexName, ' 아파트 상세정보 조회 시작.');
-
+        bot.message(complex.cortarAddress + ' [' + complex.complexName + '] 단지 상세정보 검색');
         var url = '';
         if(isDev) {
             url ='./api/regions/complexDetail';
@@ -404,6 +408,7 @@
             }
             //매매 거래 조회
             if(!list[i].check.deal) {
+                bot.message('[' + complex.complexName + '] ' + list[i].pyeongName + '타입[' + list[i].supplyPyeong + ']평 매물검색');
                 console.log('[' + complex.complexName + '] ' + list[i].pyeongName + '타입[' + list[i].supplyPyeong + ']평 매물검색');
                 bot.requestDealArticles(list[i], complex.complexNo);
                 isAreaComplete = false;
@@ -411,6 +416,7 @@
             }
             //전세 거래 조회
             if(!list[i].check.lease) {
+                bot.message('[' + complex.complexName + '] ' + list[i].pyeongName + '타입[' + list[i].supplyPyeong + ']평 전세검색');
                 console.log('[' + complex.complexName + '] ' + list[i].pyeongName + '타입[' + list[i].supplyPyeong + ']평 전세검색');
                 bot.requestLeaseArticles(list[i], complex.complexNo);
                 isAreaComplete = false;
@@ -729,8 +735,25 @@
         complexCount.innerHTML = i + '/' + total;
         complexProgress.innerHTML = rate + '%';
         complexProgress.style.width = rate + '%';
-
     }
+
+    Bot.fn.message = function(msg) {
+        botMessage.innerHTML = msg;
+    }
+
+    Bot.fn.setInterval = function(min, max) {
+        if(min) {
+            interval.min = min;
+        }
+        if(max) {
+            interval.max = max;
+        }
+    }
+
+    Bot.fn.getInterval = function() {
+        return interval;
+    }
+
 
 
     window.Bot = Bot;

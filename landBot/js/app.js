@@ -56,6 +56,19 @@ var condition = {
                 output.init();
             }
         }
+        //사용 책임.
+        $('#isAgree').on('change', function(e) {
+
+            $('button#startBot').attr('disabled', !e.target.checked);
+            $('button#stopBot').attr('disabled', !e.target.checked);
+            $('button#resetBot').attr('disabled', !e.target.checked);
+
+            if(e.target.checked) {
+                $('p.lead').hide();
+            } else {
+                $('p.lead').show();
+            }
+        });
     };
 
     App.fn.getPriceCleanString = function(str) {
@@ -410,6 +423,10 @@ function(){
 
         // bot 실행
         $('button#startBot').on('click', jQuery.proxy(this.startBot, this));
+        // bot 중지
+        $('button#stopBot').on('click', jQuery.proxy(this.stopBot, this));
+        // bot 초기#
+        $('button#resetBot').on('click', jQuery.proxy(this.resetBot, this));
 
 
     }
@@ -603,6 +620,22 @@ function(){
             alert('선택된 동이 없습니다.!')
             return false;
         }
+    }
+
+    Publisher.fn.stopBot = function(e) {
+        bot.stop();
+        alert('bot 동작을 중지하였습니다.');
+        return false;
+    }
+
+    Publisher.fn.resetBot = function(e) {
+
+        if(confirm('수집된 데이터를 모두 삭제합니다. 그래도 진행하시겠습니까?')) {
+            bot.stop();
+            bot.initData();
+            alert('데이터를 초기화 하였습니다.');
+        }
+        return false;
     }
 
 
