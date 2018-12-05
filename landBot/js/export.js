@@ -335,11 +335,24 @@
             tr.appendChild(this.cell(area.deal.articleDetail.direction));
         } else {
             //매매 월부가
-            tr.appendChild(this.cell(emptyDataCell));
+            if(area.dealReal) {
+                tr.appendChild(this.cell(area.dealReal.dealPrice));
+            } else {
+                if(area.dealKb) {
+                    tr.appendChild(this.cell(area.dealKb.dealLowPriceLimit));
+                } else {
+                    tr.appendChild(this.cell(emptyDataCell));
+                }
+            }
             //매매 동호수
             tr.appendChild(this.cell(emptyDataCell));
             //매매 해당층
-            tr.appendChild(this.cell(emptyDataCell));
+            if(area.dealReal) {
+                tr.appendChild(this.cell(area.dealReal.floor));
+            } else {
+                tr.appendChild(this.cell(emptyDataCell));
+            }
+
             //매매동 총층
             tr.appendChild(this.cell(emptyDataCell));
             //매매 층정보
@@ -384,7 +397,15 @@
             tr.appendChild(this.cell(area.lease.direction));
         } else {
             //전세 최고가
-            tr.appendChild(this.cell(emptyDataCell));
+            if(area.leaseReal) {
+                tr.appendChild(this.cell(area.leaseReal.leasePrice));
+            } else {
+                if(area.leaseKb) {
+                    tr.appendChild(this.cell(area.leaseKb.leaseUpperPriceLimit));
+                } else {
+                    tr.appendChild(this.cell(emptyDataCell));
+                }
+            }
             //전세 최저가
             tr.appendChild(this.cell(emptyDataCell));
             //동

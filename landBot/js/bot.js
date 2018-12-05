@@ -23,6 +23,8 @@
         max : 3000
     }
 
+    var dateRange = 1000* 60 * 60 * 24 * 93;
+
     var replayCount = 3;
 
     var api = {
@@ -35,7 +37,9 @@
         // 매물 검색.
         articles : 'https://new.land.naver.com/api/articles/complex/{{complexNo}}',
         // 매물 상세 검색
-        articlesDetail : 'https://new.land.naver.com/api/articles/{{articleNo}}'
+        articlesDetail : 'https://new.land.naver.com/api/articles/{{articleNo}}',
+        // 실거래가
+        prices : 'https://new.land.naver.com/api/complexes/{{complexNo}}/prices'
     }
 
 
@@ -525,7 +529,17 @@
                     //case2. 저층, 탑층만 매물이 있는 경우.
                     isFind = true;
                     area.deal = null;
-                    area.dealFindStr = '중층매물없음';
+                    area.dealFindStr = '매물정보없음';
+                    //실거래가.조회
+                    var isReal = bot.requestPricesArea(area, complex.complexNo, 'A1', 'real');
+                    if(isReal) {
+                        area.dealFindStr  = '국토부실거래가';
+                    } else {
+                        var isKb = bot.requestPricesArea(area, complex.complexNo, 'A1', 'kbstar')
+                        if(isKb) {
+                            area.dealFindStr  = 'kb시세';
+                        }
+                    }
                 }
             }
 
@@ -534,13 +548,26 @@
             if(!res.isMoreData) {
                 // 물건이 없는 경우.
                 area.deal = null;
-                area.dealFindStr  = '매물없음';
+                area.dealFindStr  = '매물정보없음';
+                //실거래가 조회
+                var isReal = bot.requestPricesArea(area, complex.complexNo, 'A1', 'real');
+                if(isReal) {
+                    area.dealFindStr  = '국토부실거래가';
+                } else {
+                    var isKb = bot.requestPricesArea(area, complex.complexNo, 'A1', 'kbstar')
+                    if(isKb) {
+                        area.dealFindStr  = 'kb시세';
+                    }
+                }
+
             } else {
                 console.warn('[Bot.fn.responseDealArticles] articleList:0, isMoreData:true ?? 무한루프');
                 //이런경우 직접 조회 할 수 있도록 표시하고 다음으로 넘어간다.
                 area.dealFindStr  = '직접확인요함';
             }
         }
+
+
 
         //매물검색 완료한 경우.
         if(isFind) {
@@ -584,7 +611,105 @@
         }
     }
 
+    Bot.fn.requestPricesArea = function(area, complexNo, target, type) {
 
+        var result = undefined;
+        //국토부 실거래가 최근 3개월
+        $.ajax({
+            method : 'GET',
+            url : api.prices.replace('{{complexNo}}', complexNo),
+            data : {
+                complexNo : complexNo,
+                tradeType: target,
+                year: 1,
+                areaNo: area.pyeongNo,
+                provider: type
+            },
+            dataType : 'json',
+            success : function(res) {
+                //현재 년월
+                var d = new Date();
+                var year = d.getFullYear();
+                var month = d.getMonth() + 1;
+                var now = new Date(year + '-' + month + '-01');
+
+                //실거래가 조회
+                if(res.provider === 'real') {
+                    //국토부 실거래가 최근 3개월
+                    if(res.realPriceOnMonthList && res.realPriceOnMonthList.length > 0) {
+                        //실거래가 리스트 하나씩 조회.
+                        var pList = res.realPriceOnMonthList;
+                        var realPriceMin = undefined;
+                        var realInfo = undefined;
+
+                        for(idx in pList) {
+                            var tradeDate = new Date(pList[idx].tradeBaseYear + '-' + pList[idx].tradeBaseMonth + '-01')
+                            if((now.getTime() - tradeDate.getTime()) < dateRange) {
+                                //3개월 안인 경우.
+                                for(ord in pList[idx].realPriceList) {
+                                    if( pList[idx].realPriceList[ord].floor > 3) {
+                                        if(!realPriceMin) {
+                                            if(res.tradeType === 'A1') {
+                                                realPriceMin = pList[idx].realPriceList[ord].dealPrice;
+                                            } else if(res.tradeType === 'B1') {
+                                                realPriceMin = pList[idx].realPriceList[ord].leasePrice;
+                                            }
+                                            realInfo = pList[idx].realPriceList[ord];
+                                        } else {
+                                            if(realPriceMin > pList[idx].realPriceList[ord].dealPrice) {
+                                                if(res.tradeType === 'A1') {
+                                                    realPriceMin = pList[idx].realPriceList[ord].dealPrice;
+                                                } else if(res.tradeType === 'B1') {
+                                                    realPriceMin = pList[idx].realPriceList[ord].leasePrice;
+                                                }
+                                                realInfo = pList[idx].realPriceList[ord];
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if(realPriceMin) {
+                            if(res.tradeType === 'A1') {
+                                area.dealReal = realInfo;
+                            } else if(res.tradeType === 'B1') {
+                                area.leaseReal = realInfo;
+                            }
+                            console.log('실거래가 검색 >>> ' + realInfo);
+                            result = true;
+                        } else {
+                            result = false;
+                        }
+                    } else {
+                        //실거래가가 없는 경우
+                        result = false;
+                    }
+                } else if (res.provider === 'kbstar') {
+                    //국민은행 시세중 가장 최근 시세.
+                    if(res.marketPrices[0]) {
+                        if(res.tradeType === 'A1') {
+                            area.dealKb = res.marketPrices[0];
+                        } else if(res.tradeType === 'B1') {
+                            area.leaseKb = res.marketPrices[0];
+                        }
+                        console.log('kb시세 검색 >>> ' + res.marketPrices[0]);
+
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+                }
+            },
+            error : function() {
+                console.error('[ERROR] Bot.fn.requestPricesArea - 실거래가조회 ajax');
+                //에러가 나도 그냥 다음으로 넘긴다.
+                return;
+            }
+        });
+        return result;
+
+    }
 
     //면적 전세 거래 정보 조회.
     Bot.fn.requestLeaseArticles = function(area, complexNo, page) {
@@ -658,7 +783,17 @@
                     //case2. 저층, 탑층만 매물이 있는 경우.
                     isFind = true;
                     area.lease = [];
-                    area.leaseFindStr = '전세실제 매물없음';
+                    area.leaseFindStr = '전세매물없음';
+                    var isReal = bot.requestPricesArea(area, complex.complexNo, 'B1', 'real');
+                    if(isReal) {
+                        area.leaseFindStr  = '국토부실거래가';
+                    } else {
+                        var isKb = bot.requestPricesArea(area, complex.complexNo, 'B1', 'kbstar')
+                        if(isKb) {
+                            area.leaseFindStr  = 'kb시세';
+                        }
+                    }
+
                 }
             }
 
@@ -667,7 +802,16 @@
             if(!res.isMoreData) {
                 // 물건이 없는 경우.
                 area.lease = article;
-                area.leaseFindStr = '매물없음';
+                area.leaseFindStr = '매물정보없음';
+                var isReal = bot.requestPricesArea(area, complex.complexNo, 'B1', 'real');
+                if(isReal) {
+                    area.leaseFindStr  = '국토부실거래가';
+                } else {
+                    var isKb = bot.requestPricesArea(area, complex.complexNo, 'B1', 'kbstar')
+                    if(isKb) {
+                        area.leaseFindStr  = 'kb시세';
+                    }
+                }
             } else {
                 console.warn('[Bot.fn.responseDealArticles] articleList:0, isMoreData:true ?? 무한루프 ??');
                 //이런경우 직접 조회 할 수 있도록 표시하고 다음으로 넘어간다.

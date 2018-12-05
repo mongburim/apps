@@ -51,11 +51,13 @@ var condition = {
             window.output = new Export();
         }
         if(output) {
-            output.event();
             if(debug) {
                 output.init();
             }
         }
+
+        jQuery.ajaxSetup({async:false});
+
         //사용 책임.
         $('#isAgree').on('change', function(e) {
 
